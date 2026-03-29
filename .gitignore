@@ -1,5 +1,5 @@
 __pycache__/
-.venv/
-.venv_new/
-.pytest_cache/
-.DS_Store
+venv/
+venv_new/
+pytest_cache/
+DS_Store

@@ -5,7 +5,57 @@
 **a. Initial design**
 
 - Briefly describe your initial UML design.
+  - User should be able to add their and their pet's info.
+  - User should be able to add and edit tasks, select tasks priority and duration.
+  - The app should generate daily schedule for user based on the information above.
 - What classes did you include, and what responsibilities did you assign to each?
+  - class Owner:
+    - name
+    - free_time (in minutes, total time they have for pet per day)
+    - start_time (when owner wants to start tasks)
+    - end_time (when owner wants to end tasks)
+    - update_freetime() (adjust time constraints per day)
+    - get_schedule_window() (returns time window as a tuple)
+  - class Pet:
+    - name
+    - breed
+    - age
+    - notes (on medication, anxious around strangers, ...)
+    - get_summary() (returns human-readable description of pet)
+  - class Task:
+    - task_id
+    - name
+    - category
+    - duration_min
+    - priority
+    - is_recurring
+    - preferred_time (optional preference like morning, afternoo, evening)
+    - completed
+    - mark_complete()
+    - reset() (ran if task is recurring -> resets completed to False for next day)
+    - to_dict() (serialize for storage or display)
+  - class TaskList
+    - tasks (list of Task obj)
+    - pet (reference to associated Pet obj)
+    - add_task(task)
+    - remove_task(task_id)
+    - edit_task(task_id, \*\*kwargs)
+    - get_pending_tasks()
+    - get_tasks_by_priority()
+  - class DailyPlan
+    - date
+    - scheduled_tasks (ordered list of Task, start_time tuples)
+    - skipped_tasks
+    - total_duration_min
+    - display()
+    - get_skipped_summary() (explain what was left out and why)
+  - class Scheduler
+    - owner (ref to Owner obj)
+    - task_list (ref to TaskList obj)
+    - generated_plan (most recently generated DailyPlan)
+    - generate_plan() (return a DailyPlan)
+    - can_fit_task(task, remaining_min)
+    - explain_plan() (plain language summary of scheduling decisions)
 
 **b. Design changes**
 
