@@ -74,7 +74,9 @@
 **b. Tradeoffs**
 
 - Describe one tradeoff your scheduler makes.
+  - My scheduler uses a greedy priority-first strategy. It will always schedule the highest-priority task without considering what comes after. For example, If Jordan has 35 min left, and one task is high priority and needs 30 min, and there are tow medium priority tasks that take 15 minutes each, my scheduler would pick 30 min task, skipping two 15 minute ones.
 - Why is that tradeoff reasonable for this scenario?
+  - In pet care, not all tasks are equal. Missing a medication dose or skipping breakfast has real health consequences, while pushing a grooming session to tomorrow doesn't. A greedy priority-first approach is reasonable here because the cost of skipping a high-priority task is far greater than the cost of skipping multiple low-priority ones.
 
 ---
 
