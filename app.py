@@ -1,6 +1,7 @@
 import streamlit as st
+import pandas as pd
 from datetime import time
-from pawpal_system import Pet, Task, TaskList, Owner, Scheduler
+from pawpal_system import Pet, Task, TaskList, Owner, Scheduler, _add_minutes
 
 st.set_page_config(page_title="PawPal+", page_icon="🐾", layout="centered")
 
@@ -75,9 +76,12 @@ else:
         st.session_state.task_list.add_task(task)
         st.success(f"Added: {task.name} ({task.duration_minutes} min, {task.priority})")
 
+    # --- Display tasks sorted by priority ---
     if st.session_state.task_list.tasks:
-        st.write("Current tasks:")
-        st.table([t.to_dict() for t in st.session_state.task_list.tasks])
+        sorted_tasks = st.session_state.task_list.get_tasks_by_priority()
+        st.write("Current tasks (sorted by priority):")
+        df = pd.DataFrame([t.to_dict() for t in sorted_tasks])
+        st.table(df)
     else:
         st.info("No tasks yet. Add one above.")
 
@@ -96,7 +100,40 @@ if st.button("Generate schedule"):
     else:
         scheduler = Scheduler(st.session_state.owner, st.session_state.task_list)
         plan = scheduler.generate_plan()
-        st.text(plan.display())
+        scheduler.sort_by_time()
+
+        # --- Scheduled tasks table ---
+        if plan.scheduled_tasks:
+            st.success(f"{len(plan.scheduled_tasks)} task(s) scheduled — {plan.total_duration_minutes} min total")
+            rows = []
+            for task, start in plan.scheduled_tasks:
+                end = _add_minutes(start, task.duration_minutes)
+                rows.append({
+                    "Time": f"{start.strftime('%I:%M %p')} – {end.strftime('%I:%M %p')}",
+                    "Task": task.name,
+                    "Category": task.category,
+                    "Priority": task.priority,
+                    "Duration (min)": task.duration_minutes,
+                })
+            st.table(pd.DataFrame(rows))
+        else:
+            st.info("No tasks could be scheduled within the time window.")
+
+        # --- Conflict warnings ---
+        conflicts = scheduler.detect_conflicts()
+        if conflicts:
+            for c in conflicts:
+                st.warning(c)
+        else:
+            st.success("No scheduling conflicts detected.")
+
+        # --- Skipped tasks ---
+        if plan.skipped_tasks:
+            st.subheader("Skipped Tasks")
+            for task, reason in plan.skipped_tasks:
+                st.warning(f"**{task.name}** — {reason}")
+
+        # --- Scheduler explanation ---
         st.divider()
         st.markdown("**Scheduler Explanation**")
         st.text(scheduler.explain_plan())

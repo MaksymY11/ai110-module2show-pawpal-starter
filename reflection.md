@@ -85,12 +85,14 @@
 **a. How you used AI**
 
 - How did you use AI tools during this project (for example: design brainstorming, debugging, refactoring)?
-- What kinds of prompts or questions were most helpful?
-
-**b. Judgment and verification**
+  - I used AI mainly for brainstorming and refractoring.
+- What kinds of prompts or questions were most helpful? - Most helpful prompts were the ones where I kept them very detailed and gave enough context.
+  **b. Judgment and verification**
 
 - Describe one moment where you did not accept an AI suggestion as-is.
+  - When writing tests, AI wanted to make them without using pytest.
 - How did you evaluate or verify what the AI suggested?
+  - I looked through generated code line-by-line to make sure it made sense, then tested the code to make sure it worked.
 
 ---
 
@@ -99,12 +101,18 @@
 **a. What you tested**
 
 - What behaviors did you test?
+  - Task completion, task addition, sorting correctness, recurrence logic, and conflict detection.
 - Why were these tests important?
+  - Each category targets a behavior where a bug would direcrly impact the owner's pet care plan
 
 **b. Confidence**
 
 - How confident are you that your scheduler works correctly?
+  - 4/5. Not 5/5 because tests didn't cover the Streamlit UI layer.
 - What edge cases would you test next if you had more time?
+  - Test where task would have a zero duration
+  - Test where schedule window start = end
+  - Large task lists
 
 ---
 
@@ -113,11 +121,13 @@
 **a. What went well**
 
 - What part of this project are you most satisfied with?
+  - Most satisfied with learning about how to professionally represent a README with screenshots and formatting.
 
 **b. What you would improve**
 
 - If you had another iteration, what would you improve or redesign?
-
-**c. Key takeaway**
+  - I would make the UI of streamlit app look less boring.
+    **c. Key takeaway**
 
 - What is one important thing you learned about designing systems or working with AI on this project?
+  - Given enough context and detail, AI can work wonders.
