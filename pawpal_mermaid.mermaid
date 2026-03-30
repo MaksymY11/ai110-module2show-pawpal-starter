@@ -1,0 +1,67 @@
+classDiagram
+  class Owner {
+    +String name
+    +int available_minutes_per_day
+    +String preferred_start_time
+    +String preferred_end_time
+    +update_availability()
+    +get_schedule_window() tuple
+  }
+
+  class Pet {
+    +String name
+    +String species
+    +int age
+    +String notes
+    +get_summary() String
+  }
+
+  class Task {
+    +String task_id
+    +String name
+    +String category
+    +int duration_minutes
+    +String priority
+    +bool is_recurring
+    +String preferred_time
+    +bool completed
+    +mark_complete()
+    +reset_for_new_day()
+    +to_dict() dict
+  }
+
+  class TaskList {
+    +list tasks
+    +Pet pet
+    +add_task(task)
+    +remove_task(task_id)
+    +edit_task(task_id)
+    +get_pending_tasks() list
+    +get_tasks_by_priority() list
+  }
+
+  class Scheduler {
+    +Owner owner
+    +TaskList task_list
+    +DailyPlan generated_plan
+    +generate_plan() DailyPlan
+    +can_fit_task(task, remaining_minutes) bool
+    +explain_plan() String
+  }
+
+  class DailyPlan {
+    +date date
+    +list scheduled_tasks
+    +list skipped_tasks
+    +int total_duration_minutes
+    +display()
+    +get_skipped_summary() String
+  }
+
+  Owner "1" --> "1" Pet : owns
+  Owner "1" --> "1" TaskList : manages
+  TaskList "1" o-- "many" Task : contains
+  Scheduler "1" --> "1" Owner : uses
+  Scheduler "1" --> "1" TaskList : uses
+  Scheduler "1" --> "1" DailyPlan : produces
+  DailyPlan "1" --> "many" Task : references
